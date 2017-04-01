@@ -15,7 +15,42 @@ Przedstawione zostaną trzy przybliżone algorytmy.
 \subsection{Algorytm zachłanny na wstępnie przygotowanym grafie}
 
 \subsection{Poprawienie wyniku algorytmu zachłannego}
-
+\begin{enumerate}
+\item Pokoloruj graf dowolną metodą.
+\item Znajdź wszystkie cykle $C$ o parzystej długości.
+\item Dla każdego $C$ sprawdź, czy jest pokolorowany na dokładnie dwa kolory.
+\item Przekoloruj jeden wierzchołek na inny kolor, usuń ze zbioru cykli do przekolorowania wszystkie cykle, do których należał ten wierzchołek.
+\end{enumerate}
+Różne metody wyboru wierzchołka do przekolorowania mogą dać różne rezultaty. Metodą, która wydaje się dobrym przybliżeniem jest:
+\begin{enumerate}
+\item Wyznacz zbiór wierzchołków $V_p \subseteq C$, które można przekolorować nie zwiększając liczby użytych kolorów.
+\item Jeśli $V_p = \O$, przyjmyj $V_p = C$.
+\item Wybierz wierzchołek, który jest częścią największej liczby cykli o parzystej długości.   
+\end{enumerate}
 \subsection{Dopełnienie do grafu triangulowanego}
+Gebremedhin i inni udowodnili, że każde poprawne kolorowanie grafu triangulowanego, czyli takiego, że każdy cykl o długości większej niż 3, jest kolorowaniem acyklicznym. \cite{Gb}
+Problem dopełnienia grafu do grafu triangulowanego przy najmniejszej możliwej liczbie dodanych krawędzi jest problemem NP-zupełnym \cite{NPC}, o złożoności $O(1.9601^n)$ \cite{Cmp}, tak więc w celu zwiększenia szybkości algorytmu, który i tak jest algorytmem przybliżonym, można wykorzystać do dopełnienia algorytm aproksymacyjny. Algorytmem o złożoności wielomianowej, który zapewnia dodanie co najwyżej $8k^2$ krawędzi, gdzie $k$ to minimalna liczba krawędzi w dopełnieniu, opracowany przez Assafa Natanzona, Rona Shamira, i Rodeda Sharana \cite{Approx}. Inną możliwością jest zastosowanie jednego z wielu algorytmów, które znajdują dopełnienie grafu do grafu triangulowanego bez żadnej gwarancji co do liczby dodanych krawędzi, na przykład MCS-M \cite{MCS-M}. Oprócz wielu znanych algorytmów, do zastosowania w problemie kolorowania acyklicznego wydaje się mieć sens proste podejście:
+\begin{enumerate}
+\item Znajdź wszystkie cykle o długości większej niż 3.
+\item Znajdź w każdym cyklu wierzchołek, który należy do największej liczby cykli.
+\item Dodaj w każdym cyklu krawędzie między znalezionym wierzchołkiem a wszystkimi innymi wierzchołkami cyklu (jeśli ich jeszcze nie było).
+\end{enumerate}
 
+\begin{thebibliography}{20}
+\bibitem{MCS-M}
+Berry, A.; Blair, J. R. S.; Heggernes P.; Peyton B. W. (2004), \textit{Maximum cardinality search for computing minimal triangulations of graphs}.
+Algorithmica, 39: 287–298
+
+\bibitem{Cmp}
+Fomin, Fedor V.; Kratsch, Dieter; Todinca, Ioan (2004), \textit{Exact (exponential) algorithms for treewidth and minimum fill-In}, Automata, Languages and Programming: 31st International Colloquium, ICALP 2004, Turku, Finland, July 12-16, 2004, Proceedings, Lecture Notes in Computer Science, 3142, Springer-Verlag, pp. 568–580
+
+\bibitem{Gb}
+Gebremedhin, Assefaw H.; Tarafdar, Arijit; Pothen, Alex; Walther, Andrea (2008), \textit{Efficient Computation of Sparse Hessians Using Coloring and Automatic Differentiation}, Informs Journal on Computing, 21: 209
+
+\bibitem{Approx}
+Natanzon, Assaf; Shamir, Ron; Sharan, Roded (2000), \textit{A polynomial approximation algorithm for the minimum fill-in problem}, SIAM Journal on Computing, 30 (4): 1067–1079
+
+\bibitem{NPC}
+Yannakakis, Mihalis (1981), \textit{Computing the minimum fill-in is NP-complete}, Society for Industrial and Applied Mathematics, 2 (1): 77–79
+\end{thebibliography}
 \end{document}
