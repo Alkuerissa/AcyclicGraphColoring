@@ -10,8 +10,16 @@
 Zadanie polega na pokolorowaniu grafu tak, aby każde dwa kolory indukowały graf acykliczny. 
 \section{Algorytmy}
 Przedstawione zostaną trzy przybliżone algorytmy.
-\subsection{Algorytm zachłanny ze sprawdzeniami przy każdym kroku}
-
+\subsection{Algorytm zachłanny ze sprawdzeniami w każdym kroku}
+\begin{enumerate}
+\item Stwórz pusty graf $G'$ - będą do niego dodawane pokolorowane wierzchołki.
+\item Dla każdego wierzchołka $v$:
+\item Dodaj $v$ do $G'$.
+\item Stwórz zbiór zakazanych kolorów, zawierający kolory wszystkich sąsiadów $v$ w $G'$.
+\item Znajdź wszystkie cykle w $G'$, do których należy $v$. Jeśli któryś zawiera wierzchołki tylko w dwóch kolorach, dodaj te kolory do zbioru zakazanych.
+\item Pokoloruj wierzchołek na pierwszy niezakazany kolor.
+  
+\end{enumerate}
 \subsection{Algorytm zachłanny na wstępnie przygotowanym grafie}
 
 \subsection{Poprawienie wyniku algorytmu zachłannego}
