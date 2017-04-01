@@ -25,23 +25,24 @@ Przedstawione zostaną cztery przybliżone algorytmy.
 \subsection{Poprawienie wyniku algorytmu zachłannego}
 \begin{enumerate}
 \item Pokoloruj graf dowolną metodą.
-\item Znajdź wszystkie cykle $C$ o parzystej długości.
-\item Dla każdego $C$ sprawdź, czy jest pokolorowany na dokładnie dwa kolory.
-\item Przekoloruj jeden wierzchołek na inny kolor, usuń ze zbioru cykli do przekolorowania wszystkie cykle, do których należał ten wierzchołek.
+\item Znajdź $Z$ - zbiór wszystkich cykli o parzystej długości.
+\item Dla każdego $C \in Z$ sprawdź, czy jest pokolorowany na dokładnie dwa kolory.
+\item Przekoloruj jeden wierzchołek z $C$ na inny kolor (jeśli to możliwe, kolor, który już został użyty w grafie), usuń z $Z$ wszystkie cykle, do których należał ten wierzchołek.
 \end{enumerate}
 Różne metody wyboru wierzchołka do przekolorowania mogą dać różne rezultaty. Metodą, która wydaje się dobrym przybliżeniem jest:
 \begin{enumerate}
 \item Wyznacz zbiór wierzchołków $V_p \subseteq C$, które można przekolorować nie zwiększając liczby użytych kolorów.
 \item Jeśli $V_p = \O$, przyjmyj $V_p = C$.
-\item Wybierz wierzchołek, który jest częścią największej liczby cykli o parzystej długości.   
+\item Wybierz wierzchołek, który jest częścią największej liczby cykli w $Z$. 
 \end{enumerate}
 \subsection{Dopełnienie do grafu triangulowanego}
-Gebremedhin i inni udowodnili, że każde poprawne kolorowanie grafu triangulowanego, czyli takiego, że każdy cykl o długości większej niż 3, jest kolorowaniem acyklicznym. \cite{Gb}
-Problem dopełnienia grafu do grafu triangulowanego przy najmniejszej możliwej liczbie dodanych krawędzi jest problemem NP-zupełnym \cite{NPC}, o złożoności $O(1.9601^n)$ \cite{Cmp}, tak więc w celu zwiększenia szybkości algorytmu, który i tak jest algorytmem przybliżonym, można wykorzystać do dopełnienia algorytm aproksymacyjny. Algorytmem o złożoności wielomianowej, który zapewnia dodanie co najwyżej $8k^2$ krawędzi, gdzie $k$ to minimalna liczba krawędzi w dopełnieniu, opracowany przez Assafa Natanzona, Rona Shamira, i Rodeda Sharana \cite{Approx}. Inną możliwością jest zastosowanie jednego z wielu algorytmów, które znajdują dopełnienie grafu do grafu triangulowanego bez żadnej gwarancji co do liczby dodanych krawędzi, na przykład MCS-M \cite{MCS-M}. Oprócz wielu znanych algorytmów, do zastosowania w problemie kolorowania acyklicznego wydaje się mieć sens proste podejście:
+Gebremedhin i inni udowodnili, że każde poprawne kolorowanie grafu triangulowanego, czyli takiego, że każdy cykl o długości większej niż 3 ma krawędź łączącą dwa wierzchołki z tego cyklu (ale niebędącą jego częścią), jest kolorowaniem acyklicznym. \cite{Gb}
+Problem dopełnienia grafu do grafu triangulowanego przy najmniejszej możliwej liczbie dodanych krawędzi jest problemem NP-zupełnym \cite{NPC}, o złożoności $O(1.9601^n)$ \cite{Cmp}, tak więc w celu zwiększenia szybkości algorytmu, który i tak jest algorytmem przybliżonym, można wykorzystać do dopełnienia algorytm aproksymacyjny. Algorytmem o złożoności wielomianowej, który zapewnia dodanie co najwyżej $8k^2$ krawędzi, gdzie $k$ to minimalna liczba krawędzi w dopełnieniu, jest algorytm opracowany przez Assafa Natanzona, Rona Shamira, i Rodeda Sharana \cite{Approx}. Inną możliwością jest zastosowanie jednego z wielu algorytmów, które znajdują dopełnienie grafu do grafu triangulowanego bez żadnej gwarancji co do liczby dodanych krawędzi, na przykład MCS-M \cite{MCS-M}. Oprócz wielu znanych algorytmów, do zastosowania w problemie kolorowania acyklicznego wydaje się mieć sens proste podejście:
 \begin{enumerate}
-\item Znajdź wszystkie cykle o długości większej niż 3.
-\item Znajdź w każdym cyklu wierzchołek, który należy do największej liczby cykli.
-\item Dodaj w każdym cyklu krawędzie między znalezionym wierzchołkiem a wszystkimi innymi wierzchołkami cyklu (jeśli ich jeszcze nie było).
+\item Znajdź $Z$ - zbiór wszystkich cykli o długości większej niż 3.
+\item Dla każdego cyklu $C \in Z$:
+\item Znajdź wierzchołek $v$, który należy do największej liczby cykli w $Z$.
+\item Dla każdego cyklu $C_v$, do którego należy $v$, dodaj krawędzie miedzy $v$ a pozostałymi wierzchołkami $C_v$ (o ile jeszcze ich nie było) i usuń $C_v$ z $Z$.
 \end{enumerate}
 
 \begin{thebibliography}{20}
