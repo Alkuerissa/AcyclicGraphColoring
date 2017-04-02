@@ -1,15 +1,16 @@
 \documentclass{article}
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
-\title{\texttt{Problem acyklicznego kolorowania grafu}}
+\title{Problem acyklicznego kolorowania grafu}
 \author{Ahmed Abdelkarim, Aleksandra Hernik}
 \begin{document}
 \maketitle
 \section{Definicja problemu}
 Zadanie polega na pokolorowaniu grafu tak, aby każde dwa kolory indukowały graf acykliczny. 
 \section{Algorytmy}
-Przedstawione zostaną cztery przybliżone algorytmy.
+Przedstawione zostaną trzy przybliżone algorytmy.
 \subsection{Algorytm zachłanny ze sprawdzeniami w każdym kroku}
 \begin{enumerate}
 \item Stwórz pusty graf $G'$ - będą do niego dodawane pokolorowane wierzchołki.
@@ -19,12 +20,6 @@ Przedstawione zostaną cztery przybliżone algorytmy.
 \item Znajdź wszystkie cykle w $G'$, do których należy $v$. Jeśli któryś zawiera wierzchołki tylko w dwóch kolorach, dodaj te kolory do zbioru zakazanych.
 \item Pokoloruj wierzchołek na pierwszy niezakazany kolor.
   
-\end{enumerate}
-\subsection{Algorytm zachłanny na wstępnie przygotowanym grafie}
-\begin{enumerate}
-\item Znajdź wszystkie cykle o parzystej długości.
-\item Dla każdego cyklu pokoloruj trzy kolejne wierzchołki na trzy różne kolory.
-\item Pokoloruj pozostałe wierzchołki zachłannie.
 \end{enumerate}
 \subsection{Poprawienie wyniku algorytmu zachłannego}
 \begin{enumerate}
@@ -46,7 +41,16 @@ Problem dopełnienia grafu do grafu triangulowanego przy najmniejszej możliwej 
 \item Znajdź wszystkie cykle o długości większej niż 3.
 \item Znajdź w każdym cyklu wierzchołek, który należy do największej liczby cykli.
 \item Dodaj w każdym cyklu krawędzie między znalezionym wierzchołkiem a wszystkimi innymi wierzchołkami cyklu (jeśli ich jeszcze nie było).
+
 \end{enumerate}
+\section{Uwagi}
+\subsection{Znajdowanie cykli w grafie}
+Znalezienie cykli w grafie jest częścią każdego z opisanych algorytmów. 
+Warto zauważyć, że w opisywanym problemie wystarczy znalezienie cykli bez strun, a nie wszystkich. Wszystkie inne cykle będą zawierały wyłącznie wierzchołki z co najmniej dwóch takich cykli. 
+Wynika z tego, że jeśli cykle bez strun będą spełniały założenia zadania, to wszystkie inne też.
+Można w tym celu wykorzystać implementację zaproponowaną w cytowanym artykule\cite{Cycle}.
+
+
 
 \begin{thebibliography}{20}
 \bibitem{MCS-M}
@@ -64,5 +68,9 @@ Natanzon, Assaf; Shamir, Ron; Sharan, Roded (2000), \textit{A polynomial approxi
 
 \bibitem{NPC}
 Yannakakis, Mihalis (1981), \textit{Computing the minimum fill-in is NP-complete}, Society for Industrial and Applied Mathematics, 2 (1): 77–79
+
+\bibitem{Cycles}
+\url{http://stackoverflow.com/questions/4022662/find-all-chordless-cycles-in-an-undirected-graph?noredirect=1\&lq=1}
+
 \end{thebibliography}
 \end{document}
