@@ -17,7 +17,7 @@ Przedstawione zostaną trzy przybliżone algorytmy.
 \item Dla każdego wierzchołka $v$:
 \item Dodaj $v$ do $G'$.
 \item Stwórz zbiór zakazanych kolorów, zawierający kolory wszystkich sąsiadów $v$ w $G'$.
-\item Znajdź wszystkie cykle w $G'$, do których należy $v$. Jeśli któryś zawiera wierzchołki tylko w dwóch kolorach, dodaj te kolory do zbioru zakazanych.
+\item Znajdź wszystkie cykle o parzystej długości w $G'$, do których należy $v$. Jeśli któryś zawiera wierzchołki tylko w dwóch kolorach, dodaj te kolory do zbioru zakazanych.
 \item Pokoloruj wierzchołek na pierwszy niezakazany kolor.
   
 \end{enumerate}
@@ -45,14 +45,13 @@ Problem dopełnienia grafu do grafu triangulowanego przy najmniejszej możliwej 
 \item Dla każdego cyklu $C \in Z$:
 \item Znajdź wierzchołek $v$, który należy do największej liczby cykli w $Z$.
 \item Dla każdego cyklu $C_v$, do którego należy $v$, dodaj krawędzie miedzy $v$ a pozostałymi wierzchołkami $C_v$ (o ile jeszcze ich nie było) i usuń $C_v$ z $Z$.
->>>>>>> b8876f3872d48edfc4338dcce886b0882d4cfc9d
 \end{enumerate}
 \section{Uwagi}
 \subsection{Znajdowanie cykli w grafie}
 Znalezienie cykli w grafie jest częścią każdego z opisanych algorytmów. 
-Warto zauważyć, że w opisywanym problemie wystarczy znalezienie cykli bez strun, a nie wszystkich. Wszystkie inne cykle będą zawierały wyłącznie wierzchołki z co najmniej dwóch takich cykli. 
-Wynika z tego, że jeśli cykle bez strun będą spełniały założenia zadania, to wszystkie inne też.
-Można w tym celu wykorzystać implementację zaproponowaną w cytowanym artykule\cite{Cycle}.
+Warto zauważyć, że w opisywanym problemie wystarczy znalezienie cykli niezawierających krawędzi między dwoma wierzchołkami cyklu, która nie jest jego częścią, a nie wszystkich. Wszystkie inne cykle będą zawierały wyłącznie wierzchołki z co najmniej dwóch takich cykli. 
+Wynika z tego, że jeśli takie cykle będą spełniały założenia zadania, to wszystkie inne też.
+Można w tym celu wykorzystać implementację zaproponowaną w wypowiedzi \cite{Cycles}.
 
 
 
