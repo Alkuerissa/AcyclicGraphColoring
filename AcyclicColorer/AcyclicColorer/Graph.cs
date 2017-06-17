@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace AcyclicColorer
@@ -77,6 +78,26 @@ namespace AcyclicColorer
         {
             var vertices = new List<Vertex>();
             var edges = new List<Tuple<Vertex, Vertex>>();
+	        var lines = File.ReadAllLines(path);
+	        if (lines.Length == 0)
+				throw new IOException($"Plik {path} jest pusty.");
+	        int vertexNumber = int.Parse(lines[0]);
+	        for (int i=0; i<vertexNumber; ++i)
+				vertices.Add(new Vertex());
+	        var cohesionCheck = new bool[vertexNumber];
+	        for (int i = 1; i < lines.Length; ++i)
+	        {
+		        var points = lines[i].Split(new[] {'-'}, StringSplitOptions.RemoveEmptyEntries);
+				if (points.Length != 2)
+					throw new IOException($"Linia {i}: nieprawidłowe wejście: {lines[i]} nie jest w formacie wierzchołek-wierzchołek.");
+		        var index1 = int.Parse(points[0]);
+		        var index2 = int.Parse(points[1]);
+				edges.Add(new Tuple<Vertex, Vertex>(vertices[index1],vertices[index2]));
+		        cohesionCheck[index1] = cohesionCheck[index2] = true;
+	        }
+	        if (!cohesionCheck.All(x => x))
+				throw new IOException("Wczytany graf nie jest spójny!");
+
             return new Graph(vertices, edges);
         }
 

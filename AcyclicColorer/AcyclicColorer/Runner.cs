@@ -16,7 +16,7 @@ namespace AcyclicColorer
         private void PrintUsage()
         {
             Console.WriteLine($"{AppDomain.CurrentDomain.FriendlyName} path [method] [silent]");
-            Console.WriteLine("path - ścieżka do pliku zawierającego graf,");
+            Console.WriteLine("path - ścieżka do pliku zawierającego spójny graf, gdzie pierwsza linia zawiera liczbę wierzchołków, a każda następna zawiera dokładnie jedną krawędź w formacie <wierzchołek 1>-<wierzchołek 2> (na przykład 3-4),");
             Console.WriteLine("method - metoda kolorowania, spośród:");
             for (int i = 0; i<colorers.Count; ++i)
             {
@@ -70,8 +70,9 @@ namespace AcyclicColorer
                 foreach (var colorer in colorers)
                     colorer.Graph = new Graph(graph);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+				Console.WriteLine($"Błąd odczytu grafu: {e.Message}");
                 graph = null;
             }
         }
