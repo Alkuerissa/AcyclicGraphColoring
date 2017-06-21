@@ -10,14 +10,16 @@ namespace AcyclicColorer
     {
         public override string Name => "Algorytm zachłanny ze sprawdzeniami w każdym kroku";
 
-        public GreedyCheckerColorer()
-        {
-        }
+		protected override void Init()
+		{
 
-        
-        protected override StepResult MakeStep()
+		}
+
+		protected override StepResult MakeStep()
         {
             return new StepResult(null, false);
         }
+
+
     }
 }

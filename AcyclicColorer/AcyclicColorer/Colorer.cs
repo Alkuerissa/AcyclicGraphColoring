@@ -17,6 +17,7 @@ namespace AcyclicColorer
 
         protected List<Vertex> order;    
         protected int maxColor = -1;
+	    protected int stepNumber = 0;
         
 
         protected Colorer()
@@ -32,7 +33,7 @@ namespace AcyclicColorer
             public Vertex LastColored;
             public bool ContinueAlgorithm;
 
-            public StepResult(Vertex lastColored, bool continueAlgorithm)
+            public StepResult(Vertex lastColored, bool continueAlgorithm = true)
             {
                 LastColored = lastColored;
                 ContinueAlgorithm = continueAlgorithm;
@@ -40,6 +41,7 @@ namespace AcyclicColorer
         }
 
         protected abstract StepResult MakeStep();
+	    protected abstract void Init();
 
         private bool Step()
         {
@@ -52,6 +54,7 @@ namespace AcyclicColorer
                 if (Verbose)
                     Console.WriteLine($"{stepResult.LastColored.Index,-5}: {stepResult.LastColored.Color,-5}");  
             }
+	        ++stepNumber;
             return stepResult.ContinueAlgorithm;
         }
 
@@ -64,6 +67,7 @@ namespace AcyclicColorer
             Console.WriteLine(new string('-', Name.Length));
 
             stopwatch.Start();
+			Init();
             while (Step()){}
             stopwatch.Stop();
 

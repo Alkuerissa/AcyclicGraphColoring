@@ -8,15 +8,13 @@ namespace AcyclicColorer
     public class Graph
     {
         public List<Vertex> Vertices { get; protected set; }
-        public bool Directed { get; protected set; }
-
         protected Dictionary<int, Vertex> indexVerticesMapping;
         protected int maxIndex;
-        
 
-        public Graph(IEnumerable<Vertex> startVertices, List<Tuple<Vertex, Vertex>> edges, bool directed=false)
-        {
-            Directed = directed;
+		public List<List<Vertex>> EvenCycles { get; protected set; }
+
+        public Graph(IEnumerable<Vertex> startVertices, List<Tuple<Vertex, Vertex>> edges)
+        {        
             Vertices = new List<Vertex>();
             maxIndex = 0;
             foreach (var vertex in startVertices)
@@ -30,20 +28,31 @@ namespace AcyclicColorer
             {
                 AddEdge(edge.Item1, edge.Item2);
             }
-        }
+			EvenCycles = null;
+		}
+
+	    public void AddVertex(Vertex vertex)
+	    {
+		    var v = vertex.Copy();
+		    Vertices.Add(v);
+		    foreach (var e in vertex.Edges)
+		    {
+				AddEdge(indexVerticesMapping[v.Index],
+						indexVerticesMapping[e.Index]);
+			}
+
+	    }
 
         public void AddEdge(Vertex from, Vertex to)
         {
             from.AddEdge(to);
-            if (!Directed)
-                to.AddEdge(from);
+            to.AddEdge(from);
         }
 
         public void RemoveEdge(Vertex from, Vertex to)
         {
             from.RemoveEdge(to);
-            if (!Directed)
-                to.RemoveEdge(from);
+            to.RemoveEdge(from);
         }
 
         public void ResetColors()
@@ -54,9 +63,37 @@ namespace AcyclicColorer
             }
         }
 
+	    public void UpdateEvenCycles()
+	    {
+		    FindEvenCycles();
+
+		    foreach (var vertex in Vertices)
+		    {
+			    if (vertex.EvenCycles != null)
+					vertex.EvenCycles.Clear();
+				else
+					vertex.EvenCycles = new List<List<Vertex>>();
+		    }
+			
+		    foreach (var cycle in EvenCycles)
+		    {
+			    foreach (var vertex in cycle)
+			    {
+				    vertex.EvenCycles.Add(cycle);
+			    }
+		    }
+	    }
+
+	    private void FindEvenCycles()
+	    {
+			//TODO: zaimplementowac znajdowanie wszystkich cyklow
+			//https://stackoverflow.com/questions/12367801/finding-all-cycles-in-undirected-graphs/14115627#14115627
+			//i brac tylko parzyste
+			throw new NotImplementedException();
+	    }
+
         public Graph(Graph graph)
         {
-            Directed = graph.Directed;
             Vertices = new List<Vertex>();
             maxIndex = graph.maxIndex;
             foreach (var vertex in graph.Vertices)
@@ -66,12 +103,25 @@ namespace AcyclicColorer
             CreateVerticesDictionary();
             foreach (var vertex in graph.Vertices)
             {
-                foreach (var edgeEnd in vertex.ExitingEdges)
+                foreach (var edgeEnd in vertex.Edges)
                 {
                     AddEdge(indexVerticesMapping[vertex.Index],
                             indexVerticesMapping[edgeEnd.Index]);
                 }
             }
+	        if (graph.EvenCycles != null)
+	        {
+		        EvenCycles = new List<List<Vertex>>();
+		        foreach (var cycle in graph.EvenCycles)
+		        {
+			        var c = new List<Vertex>();
+			        foreach (var v in cycle)
+				        c.Add(indexVerticesMapping[v.Index]);
+			        EvenCycles.Add(c);
+		        }
+	        }
+	        else
+		        EvenCycles = null;
         }
 
         public static Graph FromFile(string path)
