@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Colorer.cs" />
+    <Compile Include="CyclesFinder.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="ChordalColorer.cs" />
     <Compile Include="GreedyFixerColorer.cs" />
