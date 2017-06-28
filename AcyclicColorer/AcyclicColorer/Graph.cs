@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 
@@ -89,13 +90,19 @@ namespace AcyclicColorer
 
 	    private void FindEvenCycles()
 	    {
-			//TODO: zaimplementowac znajdowanie wszystkich cyklow
-			//https://stackoverflow.com/questions/12367801/finding-all-cycles-in-undirected-graphs/14115627#14115627
-			//i brac tylko parzyste
-			throw new NotImplementedException();
+			var finder = new CyclesFinder(this);
+		    EvenCycles = (from c in finder.FindCycles() where (c.Count%2 == 0) select c).ToList();
 	    }
 
-        public Graph(Graph graph)
+		public IEnumerable<Tuple<Vertex, Vertex>> GetAllEdges()
+		{
+			foreach (var v in Vertices)
+				foreach (var e in v.Edges)
+					if (e.Index > v.Index)  //graf jest nieskierowany, a chcemy zwracać tylko raz każdą krawędź
+						yield return new Tuple<Vertex, Vertex>(v, e);
+		}
+
+		public Graph(Graph graph)
         {
             Vertices = new List<Vertex>();
             maxIndex = graph.maxIndex;
