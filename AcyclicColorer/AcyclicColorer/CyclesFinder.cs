@@ -51,7 +51,6 @@ namespace AcyclicColorer
 			if (l.Count != r.Count)
 				return false;
 
-			bool ret = true;
 			for (int i = 0; i < l.Count; ++i)	//równość ze zgodną kolejnością
 				if (l[i].Index != r[i].Index)
 				{

@@ -18,13 +18,17 @@ namespace AcyclicColorer
         protected List<Vertex> order;    
         protected int maxColor = -1;
 	    protected int stepNumber = 0;
-        
+
+	    public bool IsCorrect { get; private set; }
+	    public bool IsAcyclic { get; private set; }
 
         protected Colorer()
         {
             Graph = null;
             Verbose = true;
-            order = new List<Vertex>();         
+            order = new List<Vertex>();
+	        IsAcyclic = false;
+	        IsCorrect = false;
         }
 
 
@@ -58,6 +62,41 @@ namespace AcyclicColorer
             return stepResult.ContinueAlgorithm;
         }
 
+	    private void Validate()
+	    {
+			ValidateCorrect();
+		    ValidateAcyclic();
+	    }
+
+	    private void ValidateCorrect()
+	    {
+		    IsCorrect = true;
+		    foreach (var v in Graph.Vertices)
+		    {
+			    foreach (var e in v.Edges)
+			    {
+				    if (e.Color == v.Color)
+				    {
+					    IsCorrect = false;
+					    return;
+				    }
+			    }
+		    }
+	    }
+
+	    private void ValidateAcyclic()
+	    {
+		    IsAcyclic = true;
+		    foreach (var c in Graph.EvenCycles)
+		    {
+			    if (c.Colors.Count == 2)
+			    {
+				    IsAcyclic = false;
+				    return;
+			    }
+		    }
+	    }
+
         public void Run()
         {
             Stopwatch stopwatch = new Stopwatch();
@@ -71,6 +110,7 @@ namespace AcyclicColorer
             while (Step()){}
             stopwatch.Stop();
 
+	        Validate();
             PrintSummary(stopwatch.Elapsed);
         }
 
@@ -83,7 +123,11 @@ namespace AcyclicColorer
             Console.WriteLine(new string('-', Name.Length));
             Console.WriteLine($"Czas trwania obliczeń: {time}.");
             string end = maxColor + 1 == 1 ? "" : (Enumerable.Range(2, 3).Contains(maxColor + 1) ? "y" : "ów");
-            Console.WriteLine($"Użyto {maxColor + 1} kolor{end}.");
+            Console.WriteLine($"Zostały wykorzystane {maxColor + 1} kolor{end}.");
+	        string isCorrectStr = IsCorrect ? "OK." : "błąd!";
+			Console.WriteLine($"Walidacja poprawności kolorowania: {isCorrectStr}");
+	        string isAcyclicStr = IsAcyclic ? "OK." : "błąd!";
+			Console.WriteLine($"Walidacja acykliczności kolorowania: {isAcyclicStr}");
         }
 
         public static List<Colorer> GetInstances()

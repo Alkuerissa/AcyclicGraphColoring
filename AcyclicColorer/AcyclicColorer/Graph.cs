@@ -12,9 +12,22 @@ namespace AcyclicColorer
         protected Dictionary<int, Vertex> indexVerticesMapping;
         protected int maxIndex;
 
-		public List<List<Vertex>> EvenCycles { get; protected set; }
+	    protected bool AreCyclesValid = false;
 
-        public Graph(IEnumerable<Vertex> startVertices, List<Tuple<Vertex, Vertex>> edges)
+	    private List<Cycle> _evenCycles;
+
+	    public List<Cycle> EvenCycles
+	    {
+		    get
+		    {
+			    if (!AreCyclesValid)
+					UpdateEvenCycles();
+			    return _evenCycles;
+		    }
+		    protected set { _evenCycles = value; }
+	    }
+
+	    public Graph(IEnumerable<Vertex> startVertices, List<Tuple<Vertex, Vertex>> edges)
         {        
             Vertices = new List<Vertex>();
             maxIndex = 0;
@@ -43,6 +56,7 @@ namespace AcyclicColorer
 						    indexVerticesMapping[e.Index]);
 			}
 
+		    AreCyclesValid = false;
 	    }
 
         public void AddEdge(Vertex from, Vertex to)
@@ -69,29 +83,30 @@ namespace AcyclicColorer
 
 	    public void UpdateEvenCycles()
 	    {
-		    FindEvenCycles();
+			AreCyclesValid = true;
+			FindEvenCycles();
 
 		    foreach (var vertex in Vertices)
 		    {
 			    if (vertex.EvenCycles != null)
 					vertex.EvenCycles.Clear();
 				else
-					vertex.EvenCycles = new List<List<Vertex>>();
+					vertex.EvenCycles = new List<Cycle>();
 		    }
 			
 		    foreach (var cycle in EvenCycles)
 		    {
-			    foreach (var vertex in cycle)
+			    foreach (var vertex in cycle.Vertices)
 			    {
 				    vertex.EvenCycles.Add(cycle);
 			    }
-		    }
+		    }	    
 	    }
 
 	    private void FindEvenCycles()
 	    {
 			var finder = new CyclesFinder(this);
-		    EvenCycles = (from c in finder.FindCycles() where (c.Count%2 == 0) select c).ToList();
+		    EvenCycles = (from c in finder.FindCycles() where (c.Count%2 == 0) select new Cycle(c)).ToList();
 	    }
 
 		public IEnumerable<Tuple<Vertex, Vertex>> GetAllEdges()
@@ -121,13 +136,13 @@ namespace AcyclicColorer
             }
 	        if (graph.EvenCycles != null)
 	        {
-		        EvenCycles = new List<List<Vertex>>();
+		        EvenCycles = new List<Cycle>();
 		        foreach (var cycle in graph.EvenCycles)
 		        {
 			        var c = new List<Vertex>();
-			        foreach (var v in cycle)
+			        foreach (var v in cycle.Vertices)
 				        c.Add(indexVerticesMapping[v.Index]);
-			        EvenCycles.Add(c);
+			        EvenCycles.Add(new Cycle(c));
 		        }
 	        }
 	        else
