@@ -37,14 +37,17 @@ namespace AcyclicColorer
 		    Vertices.Add(v);
 		    foreach (var e in vertex.Edges)
 		    {
-				AddEdge(indexVerticesMapping[v.Index],
-						indexVerticesMapping[e.Index]);
+                if (indexVerticesMapping.ContainsKey(e.Index))
+				    AddEdge(indexVerticesMapping[v.Index],
+						    indexVerticesMapping[e.Index]);
 			}
 
 	    }
 
         public void AddEdge(Vertex from, Vertex to)
         {
+            if (to.Edges.Contains(from))
+                return;
             from.AddEdge(to);
             to.AddEdge(from);
         }
