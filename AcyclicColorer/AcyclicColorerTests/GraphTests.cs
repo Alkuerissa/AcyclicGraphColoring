@@ -24,6 +24,7 @@ namespace AcyclicColorerTests
 				new Tuple<int, int>(2, 3),
 				new Tuple<int, int>(1, 4),
 				new Tuple<int, int>(3, 4),
+				new Tuple<int, int>(4, 5),
 				new Tuple<int, int>(5, 6),
 				new Tuple<int, int>(6, 7),
 				new Tuple<int, int>(5, 7)

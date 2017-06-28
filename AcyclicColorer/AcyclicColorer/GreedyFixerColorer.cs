@@ -11,7 +11,7 @@ namespace AcyclicColorer
         public override string Name => "Poprawienie wyniku algorytmu zachłannego";
 
 	    private List<Vertex> LargestFirstOrder;
-	    private List<List<Vertex>> Cycles;
+	    private List<Cycle> Cycles;
 
 
 	    private StepResult GreedyStep()
@@ -27,25 +27,31 @@ namespace AcyclicColorer
 			if (Cycles.Count == 0)
 				return new StepResult(null, false);
 
-		    List<Vertex> cycle;
-		    List<int> colors;
+		    Cycle cycle;
+		    Dictionary<int, int> colors;
 
 		    do
 		    {
 			    cycle = Cycles.First();
-			    colors = (from v in cycle select v.Color).Distinct().ToList();
+			    colors = cycle.Colors;
 				if (colors.Count != 2)
 					Cycles.RemoveAt(0);
 		    } while (colors.Count != 2);
 
-		    List<Vertex> recoloringCandidates = (from v in cycle where v.FindMinColor(colors) <= maxColor select v).ToList();
-		    if (recoloringCandidates.Count == 0)
-			    recoloringCandidates = cycle;
+		    List<Vertex> recoloringCandidates = (from v in cycle.Vertices where v.FindMinNonBreakingColor(colors.Keys) <= maxColor select v).ToList(); //szukamy wierzchołków, które bezpiecznie można pokolorować
 
-		    var cycleNumbers = (from v in recoloringCandidates select new Tuple<Vertex, int>(v, v.EvenCycles.Union(Cycles).Count()));
-		    var vertex = cycleNumbers.Aggregate((agg, next) => next.Item2 > agg.Item2 ? next : agg).Item1;
-		    vertex.Color = vertex.FindMinColor(colors);
+		    bool wasSafe = true;
+		    if (recoloringCandidates.Count == 0)
+		    {
+			    recoloringCandidates = cycle.Vertices.ToList();
+			    wasSafe = false;
+		    }
+
+		    var cycleNumbers = (from v in recoloringCandidates select new Tuple<Vertex, int>(v, v.EvenCycles.Intersect(Cycles).Count()));	
+		    var vertex = cycleNumbers.Aggregate((agg, next) => next.Item2 > agg.Item2 ? next : agg).Item1; //znajdujemy wierzchołek w największej liczbie cykli do poprawienia
+		    vertex.Color = wasSafe ? vertex.FindMinNonBreakingColor(colors.Keys) : maxColor + 1;
 		    Cycles = Cycles.Except(vertex.EvenCycles).ToList();
+			
 
 			return new StepResult(vertex, Cycles.Count > 0);
 		}
@@ -60,7 +66,7 @@ namespace AcyclicColorer
 	    protected override void Init()
 	    {
 			Graph.UpdateEvenCycles();
-			Cycles = new List<List<Vertex>>(Graph.EvenCycles);
+			Cycles = new List<Cycle>(Graph.EvenCycles);
 			LargestFirstOrder = new List<Vertex>(Graph.Vertices);
 			LargestFirstOrder.Sort((v1, v2) => v2.Edges.Count.CompareTo(v1.Edges.Count));
 		}
