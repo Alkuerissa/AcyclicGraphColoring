@@ -56,7 +56,7 @@ namespace AcyclicColorer
                 if (maxColor < stepResult.LastColored.Color)
                 maxColor = stepResult.LastColored.Color;
                 if (Verbose)
-                    Console.WriteLine($"{stepResult.LastColored.Index,-5}: {stepResult.LastColored.Color,-5}");  
+                    Console.WriteLine($"{stepResult.LastColored.Index,5}: {stepResult.LastColored.Color,-5}");  
             }
 	        ++stepNumber;
             return stepResult.ContinueAlgorithm;
@@ -101,9 +101,9 @@ namespace AcyclicColorer
         {
             Stopwatch stopwatch = new Stopwatch();
 
-            Console.WriteLine(new string('-', Name.Length));
+            Console.WriteLine(new string('=', Name.Length));
             Console.WriteLine(Name);
-            Console.WriteLine(new string('-', Name.Length));
+            Console.WriteLine(new string('=', Name.Length));
 
             stopwatch.Start();
 			Init();
@@ -119,7 +119,7 @@ namespace AcyclicColorer
             Console.WriteLine(new string('-', Name.Length));
             Console.WriteLine("Ostateczne kolorowanie:");
             foreach (var vertex in Graph.Vertices)
-                Console.WriteLine($"{vertex.Index,-5}: {vertex.Color,-5}");
+                Console.WriteLine($"{vertex.Index,5}: {vertex.Color,-5}");
             Console.WriteLine(new string('-', Name.Length));
             Console.WriteLine($"Czas trwania obliczeń: {time}.");
             string end = maxColor + 1 == 1 ? "" : (Enumerable.Range(2, 3).Contains(maxColor + 1) ? "y" : "ów");
@@ -128,6 +128,7 @@ namespace AcyclicColorer
 			Console.WriteLine($"Walidacja poprawności kolorowania: {isCorrectStr}");
 	        string isAcyclicStr = IsAcyclic ? "OK." : "błąd!";
 			Console.WriteLine($"Walidacja acykliczności kolorowania: {isAcyclicStr}");
+			Console.WriteLine();
         }
 
         public static List<Colorer> GetInstances()
