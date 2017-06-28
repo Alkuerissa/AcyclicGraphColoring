@@ -144,7 +144,6 @@ namespace AcyclicColorer
 	        int vertexNumber = int.Parse(lines[0]);
 	        for (int i=0; i<vertexNumber; ++i)
 				vertices.Add(new Vertex());
-	        var cohesionCheck = new bool[vertexNumber];
 	        for (int i = 1; i < lines.Length; ++i)
 	        {
 		        var points = lines[i].Split(new[] {'-'}, StringSplitOptions.RemoveEmptyEntries);
@@ -153,12 +152,30 @@ namespace AcyclicColorer
 		        var index1 = int.Parse(points[0]);
 		        var index2 = int.Parse(points[1]);
 				edges.Add(new Tuple<Vertex, Vertex>(vertices[index1],vertices[index2]));
-		        cohesionCheck[index1] = cohesionCheck[index2] = true;
 	        }
-	        if (!cohesionCheck.All(x => x))
+            var graph = new Graph(vertices, edges);
+            if (!graph.IsCoherent())
 				throw new IOException("Wczytany graf nie jest spójny!");
+            return graph;
+        }
 
-            return new Graph(vertices, edges);
+        protected bool IsCoherent()
+        {
+            if (Vertices.Count == 0)
+                return true;
+            var visited = new HashSet<int>();
+            DFS(Vertices.First(), visited);
+            return visited.Count == Vertices.Count;
+        }
+
+        protected void DFS(Vertex current, HashSet<int> visited)
+        {
+            visited.Add(current.Index);
+            foreach (var neighbor in current.Edges)
+            {
+                if (!visited.Contains(neighbor.Index))
+                    DFS(neighbor, visited);
+            }
         }
 
         protected void CreateVerticesDictionary()
