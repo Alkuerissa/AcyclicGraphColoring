@@ -27,6 +27,14 @@ namespace AcyclicColorer
 		    protected set { _evenCycles = value; }
 	    }
 
+        public Graph()
+        {
+            Vertices = new List<Vertex>();
+            maxIndex = 0;
+            indexVerticesMapping = new Dictionary<int, Vertex>();
+            EvenCycles = null;
+        }
+
 	    public Graph(IEnumerable<Vertex> startVertices, List<Tuple<Vertex, Vertex>> edges)
         {        
             Vertices = new List<Vertex>();
@@ -49,7 +57,9 @@ namespace AcyclicColorer
 	    {
 		    var v = vertex.Copy();
 		    Vertices.Add(v);
-		    foreach (var e in vertex.Edges)
+	        indexVerticesMapping[v.Index] = v;
+
+            foreach (var e in vertex.Edges)
 		    {
                 if (indexVerticesMapping.ContainsKey(e.Index))
 				    AddEdge(indexVerticesMapping[v.Index],
